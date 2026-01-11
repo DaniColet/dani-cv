@@ -1,0 +1,27 @@
+name: Frontend Build & Validate
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true  # Fetch themes (PaperMod)
+
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: 'latest'
+        extended: true
+
+    - name: Build
+      run: hugo --minify
+
+    # Amplify Deploy is mostly automated by Amplify Console interacting with GitHub,
+    # so specific deploy step here might not be needed unless using Amplify CLI.
+    # We validate the build here.

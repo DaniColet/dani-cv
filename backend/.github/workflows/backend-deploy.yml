@@ -1,0 +1,78 @@
+name: Backend Deploy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'lambda/**'
+      - 'terraform/**'
+      - 'tests/**'
+
+env:
+  AWS_REGION: us-east-1
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r tests/requirements.txt
+        pip install -r lambda/requirements.txt
+
+    - name: Test with pytest
+      run: |
+        export PYTHONPATH=$PYTHONPATH:$(pwd)/lambda
+        # Run tests with coverage
+        pytest tests/ -v --cov=lambda --cov-report=term-missing
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    # Manual approval for Learner Lab environment if needed, or just auto-deploy
+    environment: production 
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.6.0
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: ./terraform
+
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: ./terraform
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+      working-directory: ./terraform
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      run: terraform apply -auto-approve tfplan
+      working-directory: ./terraform

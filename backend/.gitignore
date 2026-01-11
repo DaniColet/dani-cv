@@ -1,0 +1,21 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# AWS
+.aws/
+function.zip
+
+# IDE
+.vscode/
+.idea/
