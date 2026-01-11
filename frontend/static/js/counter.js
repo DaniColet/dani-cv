@@ -1,5 +1,5 @@
 // Visitor Counter Logic
-const API_ENDPOINT = 'https://mqyi8rfus7.execute-api.us-east-1.amazonaws.com/prod/counter'; // e.g. https://xyz.execute-api.us-east-1.amazonaws.com/prod/counter
+const API_ENDPOINT = 'https://f0na88kvck.execute-api.us-east-1.amazonaws.com/prod/counter'; // e.g. https://xyz.execute-api.us-east-1.amazonaws.com/prod/counter
 
 document.addEventListener('DOMContentLoaded', () => {
     const counterElement = document.getElementById('visitor-count');
