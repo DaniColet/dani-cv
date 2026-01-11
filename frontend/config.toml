@@ -14,16 +14,13 @@ theme = 'PaperMod'
         subtitle = "Cloud Engineer | DevOps Enthusiast"
         imageUrl = "https://github.com/DaniColet.png"
         imageTitle = "My Profile"
-        buttons = [
-            {
-                name = "GitHub",
-                url = "https://github.com/DaniColet"
-            },
-            {
-                name = "LinkedIn",
-                url = "https://linkedin.com/in/danicolet"
-            }
-        ]
+    [[params.profileMode.buttons]]
+        name = "GitHub"
+        url = "https://github.com/DaniColet"
+
+    [[params.profileMode.buttons]]
+        name = "LinkedIn"
+        url = "https://linkedin.com/in/danicolet"
 
 [menu]
   [[menu.main]]
